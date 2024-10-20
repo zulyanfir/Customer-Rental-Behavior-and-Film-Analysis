@@ -8,6 +8,9 @@ In this portfolio, the information to be retrieved is about customer rental beha
 2. Knowing the total number of movies per category and rating.
 3. Knowing the most and least frequently rented movies.
 
+These are the tables used to analyze Customer Rental Behavior and Film:
+![image](https://github.com/user-attachments/assets/57af5dba-5ac5-486a-8012-b67df3aff750)
+
 
 Query for knowing the renters and how much they rented:
 ```SQL
