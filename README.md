@@ -1,4 +1,4 @@
-# Customer-Rental-Behavior-and-Film-Analysis
+# Customer Rental Behavior and Film Analysis
 Welcome to my first portfolio project about databases. This project focuses on Data Retrieval to retrieve information from the Sakila database using MySQL.  
 
 The Sakila database is a well-normalized schema that models a DVD rental store, featuring things like movies, actors, movie-actor relationships, and a central inventory table that links movies, stores, and rentals. The sample Sakila database can be downloaded from the official MySQL website at the following link https://dev.mysql.com/doc/sakila/en/sakila-installation.html
@@ -14,88 +14,96 @@ These are the tables used to analyze Customer Rental Behavior and Film:
 
 Query for knowing the renters and how much they rented:
 ```SQL
-select 
-	cust.customer_id,
-	cust.first_name,
-	cust.last_name,
+SELECT 
+	cust.customer_id, 
+	cust.first_name, 
+	cust.last_name, 
 	cust.email,
-	count(rent.customer_id) as number_of_rent
-from 
+	COUNT(rent.rental_id) AS total_rentals
+FROM 
 	customer cust
-join 
-	rental rent on cust.customer_id = rent.customer_id
-group by cust.customer_id
-order by number_of_rent desc # Sorting from the tenants with the highest number of rentals
-limit 10;
+LEFT JOIN 
+	rental rent ON cust.customer_id = rent.customer_id
+GROUP BY 
+	cust.customer_id
+ORDER BY total_rentals DESC;
 ```
 With the query above, we can find out the 10 tenants with the highest number of rentals in descending order. The customer named Eleanor Hunt who is the customer with the highest number of rentals, which is 46 rentals.
 
 
-![image](https://github.com/user-attachments/assets/f5783745-f7ab-4cc0-9856-132d0c6caef2)
+![image](https://github.com/user-attachments/assets/5a9cf9af-764a-4da5-a675-16921847d0b0)
 
 
 Query for knowing the total number of movies per category and rating:
 ```SQL
-select 
-	cate.name as category_name,
-	fil.rating,
-	count(fil.film_id) as total_film
-from 
+SELECT 
+	cate.name AS category, 
+	fil.rating, 
+	COUNT(fil.film_id) AS total_films
+FROM 
 	film fil
-join 
-	film_category fil_cate on fil_cate.film_id = fil.film_id 
-join 
-	category cate on cate.category_id = fil_cate.category_id
-group by cate.name, fil.rating;
+LEFT JOIN 
+	film_category fil_cate ON fil.film_id = fil_cate.film_id
+LEFT JOIN 
+	category cate ON fil_cate.category_id = cate.category_id
+GROUP BY 
+	cate.name, fil.rating
+ORDER BY category;
 ```
 
 Using the query above, we can find out the number of movies distributed by category and rating.
 
-![image](https://github.com/user-attachments/assets/59e324b8-4eeb-44bb-8820-ec2a6d42f975)
+![image](https://github.com/user-attachments/assets/77af342c-f9a7-4d94-bbb6-5f6314b096a9)
+
 
 
 Query for knowing the most frequently rented movies:
 ```SQL
-# Ordered by most rented movies
 SELECT 
 	fil.title, 
 	COUNT(rent.rental_id) AS total_rentals
 FROM 
 	film fil
-JOIN 
+LEFT JOIN 
 	inventory inven ON fil.film_id = inven.film_id
-JOIN 
+LEFT JOIN 
 	rental rent ON inven.inventory_id = rent.inventory_id
 GROUP BY 
 	fil.title
 ORDER BY 
-	total_rentals DESC;  
+	total_rentals desc
+LIMIT 10; 
 ```
 
 With the query above, it can be seen that the most rented movie title is Bucket Brotherhood with 34 rentals.
 
-![image](https://github.com/user-attachments/assets/a7ad4ba4-caa1-448b-8089-ab8d5b6cff02)
+![image](https://github.com/user-attachments/assets/b9b00a0a-083e-468b-92fa-a1431db5e2b6)
 
 
 Query for knowing the least frequently rented movies:
 ```SQL
-# Ordered by least rented movies
 SELECT 
 	fil.title, 
+	cate.name as category,
 	COUNT(rent.rental_id) AS total_rentals
 FROM 
 	film fil
-JOIN 
+LEFT JOIN 
 	inventory inven ON fil.film_id = inven.film_id
-JOIN 
+LEFT JOIN 
 	rental rent ON inven.inventory_id = rent.inventory_id
+left join 
+	film_category fil_cate ON fil_cate.film_id = fil.film_id 
+left join
+	category cate ON cate.category_id = fil_cate.category_id 
 GROUP BY 
-	fil.title
-ORDER BY 
-	total_rentals ASC;
+	fil.title, cate.name
+HAVING total_rentals = 0
+ORDER BY category;
 ```
 
 With the above query, it can be seen that the least rented movie titles are Mixed Doors, Train Bunch, and Hardly Robbers with a total of 4 rentals.
 
-![image](https://github.com/user-attachments/assets/c14bfad4-5e0d-4d6b-8775-771a85b7a846)
+![image](https://github.com/user-attachments/assets/c9b000ad-8ff1-4eaa-85c9-24138a8f27d1)
+
 
