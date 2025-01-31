@@ -104,6 +104,7 @@ ORDER BY category;
 
 With the above query, it can be seen that the least rented movie titles are Mixed Doors, Train Bunch, and Hardly Robbers with a total of 4 rentals.
 
-![image](https://github.com/user-attachments/assets/c9b000ad-8ff1-4eaa-85c9-24138a8f27d1)
+![image](https://github.com/user-attachments/assets/533e4c9d-97e7-4b96-9434-7ec6ea819b1a)
+
 
 
